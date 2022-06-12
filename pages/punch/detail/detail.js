@@ -29,29 +29,20 @@ Page({
       arr.forEach((item) => {
 
         if (item.id == id) {
-
-          var beginDate = item.beginDate;
-          var endDate = item.endDate;
-          var iTaskState = util.retTaskState(beginDate, endDate);
+          var iTaskState = util.retTaskState(item.beginDate);
           var bPunched = util.retPunched(item.id);
 
           this.setData({
             id: id,
-            title: item.title,
             content: item.content,
             createTime: item.createTime,
-            beginDate: beginDate,
-            endDate: endDate,
+            beginDate: item.beginDate,
+            sumDays: item.sumDays,
 
             state: iTaskState,
             stateColorClass: util.getTaskColorClass(iTaskState),
-            // btnState: 按钮文字
             btnState: util.getBtnText(iTaskState, bPunched),
-
-            // 活动未开始 or 今天已打卡
             disabled: iTaskState != 1 || bPunched,
-
-            sumDays: item.sumDays
           })
         }
       })
@@ -71,12 +62,8 @@ Page({
     // 已打卡天数
     var punchCount = data.punchCount ? data.punchCount : 0;
 
-    // 最长累计打卡天数
-    var serialMaxDays = data.serialMaxDays ? data.serialMaxDays : 0;
-
     // 打卡已持续天数 data.lastedDays
-    var endD = util.compareDate(this.data.endDate, new Date()) > 0 ? util.formatDate(new Date()) : this.data.endDate;
-    var lastedDays = util.getSumDays(this.data.beginDate, endD);
+    var lastedDays = util.getSumDays(this.data.beginDate, util.formatDate(new Date()));
 
     var d = [];
     for (var i = 0; i < lastedDays; i++) {
@@ -88,18 +75,15 @@ Page({
     }
     // console.log('打卡记录总览赋值', d);
 
-
     this.setData({
       punchCount: punchCount,
-      serialMaxDays: serialMaxDays,
-      activity: d,
+      activity: d, // TODO: 日历形式展示
       arrRecord: arrRecord
     })
   },
 
   // 编辑活动
   editActivity() {
-
     wx.redirectTo({
       url: '../edit/edit?id=' + this.data.id +'&state='+this.data.state,
     })
@@ -127,13 +111,7 @@ Page({
     })
   },
 
-  // 删除活动，
-  // 依据活动id  删除该id下的所有数据
-  // 单人的，删除自己的数据
-  // 多人的，仅删除自己的并结束活动？
   DeleteActivity(id) {
-
-    // Del 这个活动 
     var arr = wx.getStorageSync('activity');
     var data = [];
     if (arr.length) {
@@ -144,12 +122,9 @@ Page({
       })
       wx.setStorageSync('activity', data);
     }
-
-    // Del 这个活动下的打卡数据
     wx.removeStorageSync('signin' + id);
   },
 
-  // 这里签到。签到成功刷新当前页面
   signIn() {
 
     var id = this.data.id;

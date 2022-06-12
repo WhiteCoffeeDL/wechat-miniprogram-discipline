@@ -25,12 +25,6 @@
       </block>
     </view>
   </view>
-  <!-- 最长累计打卡天数 -->
-  <view class='box-punchinfo'>
-    <view class='title'>最长连续打卡 
-      <text class='f-red'>{{serialMaxDays}}</text> 天
-    </view>
-  </view>
   <!-- 打卡详情 -->
   <view class='box-punchinfo'>
     <view class='title'>打卡详情</view>

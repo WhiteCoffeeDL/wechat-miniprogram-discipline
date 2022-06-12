@@ -1,5 +1,5 @@
-var arrTaskState = ['未开始', '进行中', '已结束'];
-var arrBtnState = ['尚未开始', '打卡', '已经结束'];
+var arrTaskState = ['未开始', '进行中', '暂停中'];
+var arrBtnState = ['尚未开始', '打卡', '暂停中'];
 var arrTaskColor = ['c-coming', 'c-doing', 'c-completed'];
 
 // 按钮文字
@@ -129,35 +129,22 @@ function getSumDays(begin, end) {
 
 // 活动状态判定   用标准时间比较，只比较年月日，不涉及时分秒
 // 未开始 0 now < begin  
-// 进行中 1 begin <= now <= end
-// 已结束 2 now > end 
+// 进行中 1 begin <= now
 // 异常情况 -1 
-function retTaskState(begin, end) {
-
+function retTaskState(begin) {
   var state = -1;
-  var now = retDateObj(new Date());
-  begin = retDateObj(begin);
-  end = retDateObj(end);
-
-    // console.log(begin);
-    // console.log(now);
-    // console.log(end);
-
-  if (begin && end) {
-
-    now = now.getTime();
-    begin = begin.getTime();
-    end = end.getTime();
-
-    if (now < begin) {
+  
+  var now = retDateObj(new Date()).getTime();
+  var parse_begin = retDateObj(begin);
+    
+  if (parse_begin) {
+    parse_begin = parse_begin.getTime();
+    if (now < parse_begin) {
       state = 0;
-    } else if (now <= end) {
-      state = 1;
     } else {
-      state = 2;
+      state = 1;
     }
   }
-  // console.log("util - retTaskState" + state);
   return state;
 }
 
@@ -180,7 +167,6 @@ function retDateObj(date) {
 
 // 今天是否已打卡
 function retPunched(id, arrRecord) {
-
   var arrRecord = arrRecord ? arrRecord : wx.getStorageSync('signin' + id).arrRecord;
   var re = false;
 
