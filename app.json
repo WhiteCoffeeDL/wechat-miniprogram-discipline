@@ -1,14 +1,44 @@
 {
-  "pages":[
-    "pages/index/index",
-    "pages/logs/logs"
+  "pages": [
+      "pages/punch/main/main",
+      "pages/punch/create/create",
+      "pages/punch/detail/detail",
+      "pages/punch/edit/edit",
+      "pages/lifelist/main/main",
+      "pages/lifelist/create/create",
+      "pages/three/main/main",
+      "pages/three/create/create",
+      "pages/mine/index"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Weixin",
-    "navigationBarTextStyle":"black"
+  "window": {
+      "backgroundTextStyle": "light",
+      "navigationBarBackgroundColor": "#333",
+      "navigationBarTitleText": "咸鱼翻身日记本",
+      "navigationBarTextStyle": "white"
   },
-  "style": "v2",
+  "tabBar": {
+      "color": "#999",
+      "selectedColor": "#1f4ba5",
+      "list": [
+          {
+              "pagePath": "pages/three/main/main",
+              "text": "目标",
+              "iconPath": "/img/tab/things.png",
+              "selectedIconPath": "/img/tab/things_hl.png"
+          },
+          {
+              "pagePath": "pages/punch/main/main",
+              "text": "打卡",
+              "iconPath": "/img/tab/punch.png",
+              "selectedIconPath": "/img/tab/punch_hl.png"
+          },
+          {
+              "pagePath": "pages/lifelist/main/main",
+              "text": "清单:待修改",
+              "iconPath": "/img/tab/list.png",
+              "selectedIconPath": "/img/tab/list_hl.png"
+          }
+      ]
+  },
   "sitemapLocation": "sitemap.json"
 }
