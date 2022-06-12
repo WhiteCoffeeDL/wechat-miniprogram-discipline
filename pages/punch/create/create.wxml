@@ -1,31 +1,21 @@
 <view class="main-container">
-  <view class="box-title">创建打卡任务</view>
-  <view class="input-box name">
-    <input type="text" placeholder="为活动起个名字吧" bindblur="titleChange" />
-  </view>
+  <view class='box-title'>任务描述</view>
   <view class="input-box content">
-    <textarea placeholder="活动描述，也可以激励自己一下~" bindblur="contentChange" />
+    <!-- <textarea placeholder="一句话描述，例如：10个俯卧撑 or 30天读完xxx书" bindblur="contentChange" /> -->
+    <input placeholder="一句话描述，例如：10个俯卧撑 or 30天读完xxx书" bindblur="contentChange" />
   </view>
 
-  <!-- 活動時間 -->
   <view class='time-box'>
-    <view class='box-title'>活动时间</view>
-    <view class='switch'>
-      <switch checked='{{bIncludeToday}}' bindchange="bindSwithChange">从今天开始？</switch>
-    </view>
+    <view class='box-title'>打卡周期</view>
     <view class='duration-time'>
-      <input type='text' value='{{sumDays}}' bindblur='sumDaysChange'></input>
-      <text>天元气计划 </text>
-      <text>( 也可直接设置结束日期 )</text>
+      <input type='text' value='{{period}}' bindblur='periodChange'></input>
+      <text>天打卡一次 </text>
+      <text>( 整数天 )</text>
     </view>
     <view class="input-box">
       <view class="time-list">
         <text class="title">开始时间</text>
         <picker class="date" mode="date" value="{{beginDate}}" bindchange="bindBeginDateChange">{{beginDate}}</picker>
-      </view>
-      <view class="time-list">
-        <text class="title">结束时间</text>
-        <picker class="date" mode="date" value="{{endDate}}" bindchange="bindEndDateChange">{{endDate}}</picker>
       </view>
     </view>
   </view>

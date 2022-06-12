@@ -80,8 +80,6 @@ Page({
           btnState: util.getBtnText(iTaskState, bPunched),
           // 活动未开始 or 今天已打卡
           disabled: iTaskState != 1 || bPunched,
-          // 显示开始时间（活动未开始） 还是 结束时间
-          beginShow: iTaskState == 0 ? true : false
         };
 
         // 0 未开始  1 进行中 2 已结束

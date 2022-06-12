@@ -2,124 +2,55 @@ var util = require('../../../utils/util.js');
 
 Page({
   data: {
-    title: '',
-    content: '坚持打卡~',
-    bIncludeToday: true,
-    sumDays: 21
+    content: '',
+    period: 1
   },
 
   // 加载时初始化一下  时间 
   onLoad() {
-
-    var date = this.getDate(this.data.bIncludeToday);
-
     this.setData({
       createTime: util.formatTime(new Date()),
-      beginDate: date.beginDate,
-      endDate: date.endDate
-    })
-  },
-
-  // 获取 起止时间
-  getDate(bIncludeToday) {
-
-    var now = new Date(),
-      beginDate = bIncludeToday ? util.formatFutureTime(now, 0) : util.formatFutureTime(now, 1),
-      endDate = util.formatFutureTime(beginDate, this.data.sumDays - 1);
-
-    return {
-      beginDate: beginDate,
-      endDate: endDate
-    };
-  },
-
-
-  // 是否包含今天
-  bindSwithChange(e) {
-
-    var bIncludeToday = e.detail.value;
-    var date = this.getDate(bIncludeToday);
-
-    this.setData({
-      bIncludeToday: bIncludeToday,
-      beginDate: date.beginDate,
-      endDate: date.endDate
+      beginDate: util.formatFutureTime(new Date(), 0)//, date.beginDate,
     })
   },
 
   // 设置计划天数
-  sumDaysChange(e) {
-    var oriSumDays = this.data.sumDays;
-    var sumDays = parseInt(e.detail.value);
-    if (sumDays && sumDays > 0) {
+  periodChange(e) {
+    oriPeriod = this.data.period;
+    var period = parseInt(e.detail.value);
+    if (period && period > 0) {
       this.setData({
-        sumDays: sumDays,
-        endDate: util.formatFutureTime(this.data.beginDate, sumDays - 1)
+        period: period,
       })
     } else {
       wx.showModal({
-        title: 'Hey, 别急',
-        content: '周期至少是1天',
+        title: 'Sorry',
+        content: '周期设置错误',
         showCancel: false
       })
       this.setData({
-        sumDays: oriSumDays
+        period: oriPeriod
       })
     }
   },
 
-  // 两种绑定函数的写法。
-  // 时间设定
-  // 怎么都觉得这里有些重复
   bindBeginDateChange(e) {
     var beginDate = e.detail.value,
       now = new Date();
 
     if (util.compareDate(beginDate, now) > 0) {
-      var endDate = util.formatFutureTime(beginDate, this.data.sumDays - 1);
-
       this.setData({
         beginDate: beginDate,
-        endDate: endDate
       })
     } else {
       wx.showModal({
-        title: 'Hey, 别急',
-        content: '开始时间不得早于今天',
+        title: 'Sorry',
+        content: '开始时间不可早于今天',
         showCancel: false
       })
     }
   },
 
-  bindEndDateChange: function(e) {
-
-    var endDate = e.detail.value,
-      beginDate = this.data.beginDate,
-      now = new Date();
-
-    if (util.compareDate(endDate, beginDate) > 0 && util.compareDate(endDate, now) > 0) {
-
-      var sumDays = util.getSumDays(beginDate, endDate);
-      this.setData({
-        sumDays: sumDays,
-        endDate: endDate
-      })
-    } else {
-      wx.showModal({
-        title: 'Hey, 别急',
-        content: '结束时间不得早于开始时间和今天',
-        showCancel: false
-      })
-    }
-  },
-
-
-  // 标题，简介 设定
-  titleChange(e) {
-    this.setData({
-      title: e.detail.value
-    })
-  },
   contentChange(e) {
     this.setData({
       content: e.detail.value
@@ -130,7 +61,7 @@ Page({
   createActivity() {
 
     // 活动名称自然不可为空
-    if (this.data.title.length == 0) {
+    if (this.data.content.length == 0) {
 
       wx.showModal({
         title: 'Hey, 别急',
