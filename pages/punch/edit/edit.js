@@ -15,17 +15,16 @@ Page({
 
     if (arr.length) {
 
-      var i = 0,
-        len = arr.length,
-        item;
+      var i = 0;
+      var len = arr.length;
+      var item;
 
       for (i = 0; i < len; i++) {
         item = arr[i];
         if (item.id == id) {
           this.setData({
-            title: item.title,
             content: item.content,
-            sumDays: item.sumDays,
+            period: item.period,
             beginDate: item.beginDate,
             endDate: item.endDate,
             index: i,
@@ -39,86 +38,25 @@ Page({
   },
 
   // 设置计划天数
-  sumDaysChange(e) {
-
-    var oriSumDays = this.data.sumDays;
-    var sumDays = parseInt(e.detail.value);
-    var state = this.data.state;
-    var minDays = 0,
-      now = new Date();
-
-    if (state == 1) {
-      // 进行中
-      var minDays = util.getSumDays(this.data.beginDate, now)
-    }
-
-    if (sumDays && sumDays >= minDays) {
+  periodChange(e) {
+    var oriPeriod = this.data.period;
+    var period = parseInt(e.detail.value);
+    if (period && period > 0) {
       this.setData({
-        sumDays: sumDays,
-        endDate: util.formatFutureTime(this.data.beginDate, sumDays - 1)
+        period: period,
       })
     } else {
       wx.showModal({
-        title: '出错啦',
-        content: '周期需大于0且不得小于已过去时光',
+        title: 'Sorry',
+        content: '周期设置错误',
         showCancel: false
       })
-
       this.setData({
-        sumDays: oriSumDays
+        period: oriPeriod
       })
     }
   },
 
-  // 结束时间支持修改
-  bindEndDateChange: function(e) {
-
-    var endDate = e.detail.value;
-    var beginDate = this.data.beginDate;
-    var state = this.data.state;
-    var now = new Date();
-
-    if (state == 1) {
-      // 进行中 1 结束时间不得小于今天
-      if (util.compareDate(endDate, now) > 0) {
-
-        var sumDays = util.getSumDays(beginDate, endDate);
-        this.setData({
-          sumDays: sumDays,
-          endDate: endDate
-        })
-      } else {
-        wx.showModal({
-          title: '出错啦',
-          content: '结束时间不得早于今天',
-          showCancel: false
-        })
-      }
-    } else {
-      // 未开始 0 结束时间不得小于开始时间
-      if (util.compareDate(endDate, beginDate) > 0) {
-
-        var sumDays = util.getSumDays(beginDate, endDate);
-        this.setData({
-          sumDays: sumDays,
-          endDate: endDate
-        })
-      } else {
-        wx.showModal({
-          title: '出错啦',
-          content: '结束时间不得早于起始时间',
-          showCancel: false
-        })
-      }
-    }
-  },
-
-  // 标题，简介 设定
-  titleChange(e) {
-    this.setData({
-      title: e.detail.value
-    })
-  },
   contentChange(e) {
     this.setData({
       content: e.detail.value
@@ -127,11 +65,8 @@ Page({
 
   // 编辑提交
   editActivity() {
-
-    var data = this.data;
-
-    if (data.title.length == 0) {
-
+    // var data = this.data;
+    if (this.data.content.length == 0) {
       wx.showModal({
         title: 'Hey, 别急',
         content: '计划名称不得为空',
@@ -139,17 +74,14 @@ Page({
       })
       return;
     }
-
     // 数据保存
     // 缓存中的数据类型是string  console.log(typeof(arr))
-    var arr = wx.getStorageSync('activity'),
-      index = this.data.index,
-      editItem = arr[index];
+    var arr = wx.getStorageSync('activity');
+    var index = this.data.index;
+    var editItem = arr[index];
 
-    editItem.title = data.title;
-    editItem.content = data.content;
-    editItem.endDate = data.endDate;
-    editItem.sumDays = data.sumDays;
+    editItem.content = this.data.content;
+    editItem.period = this.data.period;
 
     arr[index] = editItem
 
@@ -157,7 +89,7 @@ Page({
 
     // 页面跳转  关闭当前页面
     wx.redirectTo({
-      url: '../detail/detail?id=' + data.id
+      url: '../detail/detail?id=' + this.data.id
     })
   }
 })
