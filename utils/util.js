@@ -167,7 +167,7 @@ function retDateObj(date) {
 
 // 今天是否已打卡
 function retPunched(id, arrRecord) {
-  var arrRecord = arrRecord ? arrRecord : wx.getStorageSync('signin' + id).arrRecord;
+  var arrRecord = arrRecord ? arrRecord : wx.getStorageSync('activity' + id).arrRecord;
   var re = false;
 
   if (arrRecord && arrRecord.length > 0) {
@@ -209,7 +209,7 @@ function retserialInfo(records) {
 function signIn(id, begin) {
 
   var now = new Date();
-  var data = wx.getStorageSync('signin' + id);
+  var data = wx.getStorageSync('activity' + id);
 
   // 每次打卡详细记录 data.arrRecord
   var arrRecord = data.arrRecord ? data.arrRecord : [];
@@ -253,7 +253,7 @@ function signIn(id, begin) {
       punchCount: punchCount + 1,
       serialMaxDays: serialInfo.serialMaxDays,
     }
-    wx.setStorageSync('signin' + id, data2);
+    wx.setStorageSync('activity' + id, data2);
 
     wx.showToast({
       title: '打卡成功',
@@ -308,6 +308,148 @@ function compareDate(begin, end) {
   return state;
 }
 
+function checkStatus(curTime) {
+
+}
+
+function refreshItem(itemDict) { 
+  // if saveIdx OK, save using Idx
+  var itemInfo = itemDict.itemInfo;
+  var itemDetail = itemDict.itemDetail;
+  if (itemInfo.status == -2) { 
+    // 已完成状态不更新
+    return;
+  }
+  if (itemInfo.status == -1) {
+    // 未开始，check时间是否已经开始
+    var ret = compareDate(itemInfo.beginDate, formatDate(new Date()));
+    if (ret <= 1) {
+      // beginDate < new Date() -- 0
+      // beginDate == new Date() -- 1
+      itemInfo.status == 1;
+    }
+  }
+  if (itemInfo.status == 0) {
+    // 暂停状态
+    var tmpTotalDaySum = getSumDays(itemInfo.beginDate, formatDate(new Date()));
+    var tmpEmptyDayNum = tmpTotalDaySum - itemDetail.totalDayNum;
+    for (var i = 0; i < tmpEmptyDayNum; i++) {
+      itemDetail.history.push(-1);
+    }
+    itemDetail.totalDayNum += tmpEmptyDayNum; // 总打卡天数
+    itemDetail.pauseDayNum += tmpEmptyDayNum; // 总暂停天数
+    itemDetail.punchDayNum += 0; // 成功打卡天数
+  }
+  if (itemInfo.status == 1) {
+    // 正常开始状态 period != 1 还未处理
+    var tmpTotalDaySum = getSumDays(itemInfo.beginDate, formatDate(new Date()));
+    var tmpEmptyDayNum = tmpTotalDaySum - itemDetail.totalDayNum;
+    for (var i = 0; i < tmpEmptyDayNum; i++) {
+      itemDetail.history.push(0);
+    }
+    itemDetail.totalDayNum += tmpEmptyDayNum; // 总打卡天数
+    itemDetail.pauseDayNum += 0; // 总暂停天数
+    itemDetail.punchDayNum += 0; // 成功打卡天数
+  }
+  
+}
+
+// extern func: getItemByID  输入ID，输出item信息
+// 找到item
+// refreshItem
+// 刷新到缓存 wx.setStorageSync('activity' + id, data2);
+function getItemByID(id) {
+  var arr = wx.getStorageSync('activity');
+  var itemDict = {};
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i].id == id) {
+      itemDict.itemInfo = arr[i];
+      itemDict.itemInfo.tmpIdx = i;
+    }
+  }
+  itemDict.itemDetail = wx.getStorageSync('activity'+id);
+  refreshItem(itemDict);
+  arr[itemDict.itemInfo.tmpIdx] = itemDict.itemInfo;
+  wx.setStorageSync('activity', arr);
+  wx.setStorageSync('activity' + id, itemDict.itemDetail);
+  return itemDict;
+}
+
+// extern func: updateItem 输入item_data，系统更新，并进行刷新，也先refreshItem再更新到
+function updateItem(itemDict) {
+  // refreshItem(tmpItem)
+  // wx.setStorageSync('activity'+id, data)
+  refreshItem(itemDict);
+  var arr = wx.getStorageSync('activity');
+  arr[itemDict.itemInfo.tmpIdx] = itemDict.itemInfo;
+  wx.setStorageSync('activity', arr);
+  wx.setStorageSync('activity' + itemDict.itemInfo.id, itemDict.itemDetail);
+}
+
+// extern func: createItem(newItem) 传入new_item，刷新到系统中
+function createItem(newItemDict) {
+  refreshItem(newItemDict);
+  var arr = wx.getStorageSync('activity');
+  if (!arr) { arr = []; }
+  arr.push(newItemDict.itemInfo);
+  wx.setStorageSync('activity', arr);
+  wx.setStorageSync('activity' + newItemDict.itemInfo.id, newItemDict.itemDetail)
+}
+
+// extern func:[signIn] punch(id, punchTime)，输入ID，打卡时间戳
+// getItemByID
+// check 没有重复打卡
+// 更新当前tmpItem
+// updateItem
+function punch(id, punchTime) {
+
+}
+
+// extern func: initDefaultItem 为create函数搞的，其中的id自动+1
+function initDefaultItem() {
+  var arr = wx.getStorageSync('activity');
+  var maxID = -1;
+  if (arr.length) {
+    arr.forEach((item, i) => {
+      if (item.id > maxID) {
+        maxID = item.id;
+      }
+    })
+  }
+  var itemInfo = {};
+  itemInfo.content = ''; // 活动内容
+  itemInfo.beginDate = ''; // 开始日期
+  itemInfo.createTime = ''; // 开始时间
+  itemInfo.period = 1; // 打卡周期
+  itemInfo.id = maxID + 1; // 任务ID
+  itemInfo.status = -1; // -2已完成 -1未开始 0暂停 1正常
+  itemInfo.tmpIdx = -1; // 动态改变，仅用于加速避免过多遍历
+  var itemDetail = {};
+  // TODO: 总天数，暂停天数，和成功打卡天数，考虑>1天周期场景
+  itemDetail.totalDayNum = 0; // 总打卡天数
+  itemDetail.pauseDayNum = 0; // 总暂停天数
+  itemDetail.punchDayNum = 0; // 成功打卡天数
+  itemDetail.history = []; // 打卡记录；-1暂停，0未打卡，1打卡
+  return {itemInfo: itemInfo, itemDetail: itemDetail};
+}
+
+// extern func: deleteItemByID 根据ID删除对应Item
+function deleteItemByID(id) {
+  var arr = wx.getStorageSync('activity');
+  var data = [];
+  if (arr.length) {
+    arr.forEach(
+      (item) => {
+        if (item.id != id) {
+          data.push(item);
+        }
+      }
+    )
+    wx.setStorageSync('activity', data);
+  }
+  wx.removeStorageSync('activity' + id);
+}
+
 module.exports = {
   formatTime: formatTime,
   formatDate: formatDate,
@@ -320,5 +462,10 @@ module.exports = {
   getBtnText: getBtnText,
   getTaskState: getTaskState,
   getTaskColorClass: getTaskColorClass,
-  compareDate: compareDate
+  compareDate: compareDate,
+  deleteItemByID: deleteItemByID,
+  initDefaultItem: initDefaultItem,
+  createItem: createItem,
+  getItemByID: getItemByID,
+  updateItem: updateItem
 }

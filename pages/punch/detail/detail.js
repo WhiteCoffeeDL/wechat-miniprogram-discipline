@@ -51,7 +51,7 @@ Page({
   // 打卡记录、勋章
   initPunchData(id) {
 
-    var data = wx.getStorageSync('signin' + id);
+    var data = wx.getStorageSync('activity' + id);
 
     // 每次打卡详细记录 data.arrRecord
     var arrRecord = data.arrRecord ? data.arrRecord : [];
@@ -112,17 +112,7 @@ Page({
   },
 
   DeleteActivity(id) {
-    var arr = wx.getStorageSync('activity');
-    var data = [];
-    if (arr.length) {
-      arr.forEach((item) => {
-        if (item.id != id) {
-          data.push(item);
-        }
-      })
-      wx.setStorageSync('activity', data);
-    }
-    wx.removeStorageSync('signin' + id);
+    util.deleteItemByID(id);
   },
 
   signIn() {

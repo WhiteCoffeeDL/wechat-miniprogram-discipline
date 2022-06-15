@@ -13,7 +13,7 @@ Page({
   onLoad() {
     this.setData({
       createTime: util.formatTime(new Date()),
-      beginDate: util.formatFutureTime(new Date(), 0)//, date.beginDate,
+      beginDate: util.formatFutureTime(new Date(), 0)
     })
   },
 
@@ -71,26 +71,16 @@ Page({
       return;
     }
 
-    var arr = wx.getStorageSync('activity');
-    var data = [];
-    var maxID = -1;
-    if (arr.length) {
-      arr.forEach((item, i) => {
-        if (item.id > maxID)
-          maxID = item.id;
-        data.push(item);
-      })
-    }
-
-    this.data.id = maxID + 1;
-    
-    data.push(this.data);
-    wx.setStorageSync('activity', data);
-    console.log(data)
+    var newItemDict = util.initDefaultItem();
+    newItemDict.itemInfo.content = this.data.content;
+    newItemDict.itemInfo.beginDate = this.data.beginDate;
+    newItemDict.itemInfo.createTime = this.data.createTime;
+    newItemDict.itemInfo.period = this.data.period;
+    util.createItem(newItemDict)
 
     // 页面跳转  关闭当前页面
     wx.redirectTo({
-      url: '../detail/detail?id=' + this.data.id
+      url: '../detail/detail?id=' + newItemDict.itemInfo.id
     })
   }
 })
