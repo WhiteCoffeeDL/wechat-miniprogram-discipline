@@ -77,7 +77,7 @@ Page({
           beginTime: beginDate,
           endTime: endDate,
           // btnState: 按钮文字
-          btnState: util.getBtnText(iTaskState, bPunched),
+          btnState: util.getStateInfo(iTaskState, bPunched).btn,
           // 活动未开始 or 今天已打卡
           disabled: iTaskState != 1 || bPunched,
         };

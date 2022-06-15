@@ -1,132 +1,3 @@
-var arrTaskState = ['未开始', '进行中', '暂停中'];
-var arrBtnState = ['尚未开始', '打卡', '暂停中'];
-var arrTaskColor = ['c-coming', 'c-doing', 'c-completed'];
-
-// 按钮文字
-function getBtnText(iTaskState, bPunched) {
-  var text = '';
-  if (iTaskState == 1) {
-    text = bPunched ? '已打卡' : '打卡';
-  } else {
-    text = arrBtnState[iTaskState];
-  }
-  return text;
-}
-
-// 任务状态
-function getTaskState(iTaskState) {
-  return arrTaskState[iTaskState];
-}
-
-// 任务状态对应颜色class
-function getTaskColorClass(iTaskState) {
-  return arrTaskColor[iTaskState];
-}
-
-// 創建任務
-
-// date 之后的 n天
-// 返回：结束时间
-function formatFutureTime(date, n) {
-
-  n = parseInt(n);
-
-  if (n <= 0) {
-    // 返回格式化的当前时间
-    return formatDate(date);
-
-  } else {
-    // 返回未来 n 天之后的日期
-    var newD = retDateObj(date);
-    var dd = newD.getTime();
-    dd += n * (1000 * 60 * 60 * 24);
-    newD.setTime(dd);
-    return formatDate(newD);
-  }
-}
-
-
-// 年-月-日 时：分：秒
-function formatTime(date) {
-
-  var year, month, day, hour, minute, second;
-
-  if (typeof date == 'object') {
-    year = date.getFullYear();
-    month = date.getMonth() + 1;
-    day = date.getDate();
-
-    hour = date.getHours();
-    minute = date.getMinutes();
-    second = date.getSeconds();
-
-  } else {
-
-
-    var temp = date.split(' ');
-    var dd = temp[0].split('-');
-    var tt = temp[1].split(':');
-
-    year = dd[0];
-    month = dd[1];
-    day = dd[2];
-
-    hour = tt[0] ? tt[0] : 0;
-    minute = tt[1] ? tt[1] : 0;
-    second = tt[2] ? tt[2] : 0;
-  }
-
-  return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':')
-}
-
-// 年-月-日
-function formatDate(date) {
-
-  var year, month, day;
-
-  if (date.getFullYear) {
-    year = date.getFullYear(),
-      month = date.getMonth() + 1,
-      day = date.getDate()
-  } else {
-
-    var date = date.split(' ')[0].split('-');
-    year = parseInt(date[0]);
-    month = parseInt(date[1]);
-    day = parseInt(date[2]);
-  }
-
-  return [year, month, day].map(formatNumber).join('-')
-}
-
-// 补0
-function formatNumber(n) {
-  n = n.toString()
-  return n[1] ? n : '0' + n
-}
-
-// 时间间隔：多少天
-function getSumDays(begin, end) {
-
-  var days = 0;
-
-  begin = retDateObj(begin);
-  end = retDateObj(end);
-
-
-  if (begin && end) {
-    begin = begin.getTime();
-    end = end.getTime();
-
-    days = (end - begin) / (1000 * 60 * 60 * 24) + 1;
-
-  }
-  // console.log("getSumDays 间隔天数：" + days);
-  return days;
-}
-
-
-
 // 活动状态判定   用标准时间比较，只比较年月日，不涉及时分秒
 // 未开始 0 now < begin  
 // 进行中 1 begin <= now
@@ -146,22 +17,6 @@ function retTaskState(begin) {
     }
   }
   return state;
-}
-
-// 返回时间对象   str -> object
-function retDateObj(date) {
-
-  if (typeof date == 'object') {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  } else {
-    var obj = {};
-
-    if (date.length > 0) {
-      var date = date.split(' ')[0].split('-');
-      obj = new Date(date[0], date[1] - 1, date[2]);
-    }
-    return obj;
-  }
 }
 
 
@@ -264,26 +119,79 @@ function signIn(id, begin) {
   return true;
 }
 
+//=============================
 
-// 创建活动时间验证， 只验证 年月日
-function checkTime(begin, end) {
+// 返回时间对象   str -> object
+function retDateObj(date) {
 
-  var now = formatDate(new Date());
-  var msg = '';
+  if (typeof date == 'object') {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  } else {
+    var obj = {};
 
-  if (compareDate(begin, end) == 2)
-    msg = '结束时间比开始时间小啦'
-  else if (compareDate(now, end) == 2)
-    msg = '噢，这都是过去啦'
-  else if (compareDate(now, begin) == 2)
-    msg = '当前时间大于开始时间啦'
-  else if (compareDate(now, begin) == -1)
-    msg = '数据乱了...'
-
-  return msg
+    if (date.length > 0) {
+      var date = date.split(' ')[0].split('-');
+      obj = new Date(date[0], date[1] - 1, date[2]);
+    }
+    return obj;
+  }
 }
 
-// 比较两个时间的大小
+function formatTime(date) {
+  var year, month, day, hour, minute, second;
+  if (typeof date == 'object') {
+    year = date.getFullYear();
+    month = date.getMonth() + 1;
+    day = date.getDate();
+    hour = date.getHours();
+    minute = date.getMinutes();
+    second = date.getSeconds();
+  } else {
+    var temp = date.split(' ');
+    var dd = temp[0].split('-');
+    var tt = temp[1].split(':');
+    year = dd[0];
+    month = dd[1];
+    day = dd[2];
+    hour = tt[0] ? tt[0] : 0;
+    minute = tt[1] ? tt[1] : 0;
+    second = tt[2] ? tt[2] : 0;
+  }
+  return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':')
+}
+
+function formatDate(date) {
+  var year, month, day;
+  if (date.getFullYear) {
+    year = date.getFullYear(),
+      month = date.getMonth() + 1,
+      day = date.getDate()
+  } else {
+    var date = date.split(' ')[0].split('-');
+    year = parseInt(date[0]);
+    month = parseInt(date[1]);
+    day = parseInt(date[2]);
+  }
+  return [year, month, day].map(formatNumber).join('-')
+}
+
+function formatNumber(n) {
+  n = n.toString()
+  return n[1] ? n : '0' + n
+}
+
+function getSumDays(begin, end) {
+  var days = 0;
+  begin = retDateObj(begin);
+  end = retDateObj(end);
+  if (begin && end) {
+    begin = begin.getTime();
+    end = end.getTime();
+    days = (end - begin) / (1000 * 60 * 60 * 24) + 1;
+  }
+  return days;
+}
+
 // 2 大于  1 等于  0 小于
 function compareDate(begin, end) {
 
@@ -306,10 +214,6 @@ function compareDate(begin, end) {
     }
   }
   return state;
-}
-
-function checkStatus(curTime) {
-
 }
 
 function refreshItem(itemDict) { 
@@ -354,10 +258,6 @@ function refreshItem(itemDict) {
   
 }
 
-// extern func: getItemByID  输入ID，输出item信息
-// 找到item
-// refreshItem
-// 刷新到缓存 wx.setStorageSync('activity' + id, data2);
 function getItemByID(id) {
   var arr = wx.getStorageSync('activity');
   var itemDict = {};
@@ -375,7 +275,6 @@ function getItemByID(id) {
   return itemDict;
 }
 
-// extern func: updateItem 输入item_data，系统更新，并进行刷新，也先refreshItem再更新到
 function updateItem(itemDict) {
   // refreshItem(tmpItem)
   // wx.setStorageSync('activity'+id, data)
@@ -386,7 +285,6 @@ function updateItem(itemDict) {
   wx.setStorageSync('activity' + itemDict.itemInfo.id, itemDict.itemDetail);
 }
 
-// extern func: createItem(newItem) 传入new_item，刷新到系统中
 function createItem(newItemDict) {
   refreshItem(newItemDict);
   var arr = wx.getStorageSync('activity');
@@ -394,6 +292,22 @@ function createItem(newItemDict) {
   arr.push(newItemDict.itemInfo);
   wx.setStorageSync('activity', arr);
   wx.setStorageSync('activity' + newItemDict.itemInfo.id, newItemDict.itemDetail)
+}
+
+function deleteItemByID(id) {
+  var arr = wx.getStorageSync('activity');
+  var data = [];
+  if (arr.length) {
+    arr.forEach(
+      (item) => {
+        if (item.id != id) {
+          data.push(item);
+        }
+      }
+    )
+    wx.setStorageSync('activity', data);
+  }
+  wx.removeStorageSync('activity' + id);
 }
 
 // extern func:[signIn] punch(id, punchTime)，输入ID，打卡时间戳
@@ -405,7 +319,6 @@ function punch(id, punchTime) {
 
 }
 
-// extern func: initDefaultItem 为create函数搞的，其中的id自动+1
 function initDefaultItem() {
   var arr = wx.getStorageSync('activity');
   var maxID = -1;
@@ -433,35 +346,38 @@ function initDefaultItem() {
   return {itemInfo: itemInfo, itemDetail: itemDetail};
 }
 
-// extern func: deleteItemByID 根据ID删除对应Item
-function deleteItemByID(id) {
-  var arr = wx.getStorageSync('activity');
-  var data = [];
-  if (arr.length) {
-    arr.forEach(
-      (item) => {
-        if (item.id != id) {
-          data.push(item);
-        }
-      }
-    )
-    wx.setStorageSync('activity', data);
+// 任务状态
+function getStateInfo(iTaskState, bPunched) {
+  var stateInfo = {};
+  if (iTaskState == -2) {
+    stateInfo.chn = '已完成';
+    stateInfo.btn = '已完成';
+    stateInfo.color = 'c-finish';
+  } else if (iTaskState == -1) {
+    stateInfo.chn = '未开始';
+    stateInfo.btn = '未开始';
+    stateInfo.color = 'c-coming';
+  } else if (iTaskState == 0) {
+    stateInfo.chn = '暂停中';
+    stateInfo.btn = '暂停中';
+    stateInfo.color = 'c-pause';
+  } else { // 1
+    stateInfo.chn = '进行中';
+    stateInfo.btn = bPunched ? '已打卡' : '打卡';
+    stateInfo.color = 'c-doing';
   }
-  wx.removeStorageSync('activity' + id);
+  return stateInfo;
 }
 
 module.exports = {
-  formatTime: formatTime,
-  formatDate: formatDate,
-  formatFutureTime: formatFutureTime,
   retTaskState: retTaskState,
   signIn: signIn,
-  getSumDays: getSumDays,
-  checkTime: checkTime,
   retPunched: retPunched,
-  getBtnText: getBtnText,
-  getTaskState: getTaskState,
-  getTaskColorClass: getTaskColorClass,
+
+  formatTime: formatTime,
+  formatDate: formatDate,
+  getSumDays: getSumDays,
+  getStateInfo: getStateInfo,
   compareDate: compareDate,
   deleteItemByID: deleteItemByID,
   initDefaultItem: initDefaultItem,

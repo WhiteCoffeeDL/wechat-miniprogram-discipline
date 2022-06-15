@@ -31,7 +31,8 @@ Page({
         if (item.id == id) {
           var iTaskState = util.retTaskState(item.beginDate);
           var bPunched = util.retPunched(item.id);
-
+          
+          var stateInfo = util.getStateInfo(iTaskState, bPunched);
           this.setData({
             id: id,
             content: item.content,
@@ -40,8 +41,8 @@ Page({
             sumDays: item.sumDays,
 
             state: iTaskState,
-            stateColorClass: util.getTaskColorClass(iTaskState),
-            btnState: util.getBtnText(iTaskState, bPunched),
+            stateColorClass: stateInfo.color,
+            btnState: stateInfo.btn,
             disabled: iTaskState != 1 || bPunched,
           })
         }
@@ -122,7 +123,7 @@ Page({
     if (bSucceed) {
       this.initPunchData(id);
       this.setData({
-        btnState: util.getBtnText(1, true),
+        btnState: util.getStateInfo(1, true).btn,
         disabled: true
       })
     }

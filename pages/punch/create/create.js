@@ -13,7 +13,7 @@ Page({
   onLoad() {
     this.setData({
       createTime: util.formatTime(new Date()),
-      beginDate: util.formatFutureTime(new Date(), 0)
+      beginDate: util.formatDate(new Date())
     })
   },
 
