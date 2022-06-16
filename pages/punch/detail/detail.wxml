@@ -33,5 +33,5 @@
 </view>
 
 <view class="createM">
-  <button type="primary" size="default" disabled="{{disablePunch}}" bindtap="signIn">{{stateInfoBtn}}</button>
+  <button type="primary" size="default" disabled="{{disablePunch}}" bindtap="punch">{{stateInfoBtn}}</button>
 </view>

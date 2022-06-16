@@ -31,9 +31,6 @@ Page({
 
     var bPunched = util.retPunched(id);
     var stateInfo = util.getStateInfo(this.data.itemDict.itemInfo.status, bPunched);
-    console.log(stateInfo);
-    console.log(this.data.itemDict.itemInfo.status);
-    console.log(bPunched);
     this.setData({
       content: this.data.itemDict.itemInfo.content,
       createTime: this.data.itemDict.itemInfo.createTime,
@@ -85,10 +82,10 @@ Page({
     util.deleteItemByID(id);
   },
 
-  signIn() { // 打卡后要刷新当前页面
+  punch() { // 打卡后要刷新当前页面
 
     var id = this.data.itemDict.itemInfo.id;
-    var bSucceed = util.signIn(id, this.data.itemDict.itemInfo.beginDate);
+    var bSucceed = util.punch(this.data.itemDict);
     if (bSucceed) {
       this.initPunchData(id);
       this.setData({

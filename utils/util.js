@@ -255,8 +255,6 @@ function refreshItem(itemDict) {
     itemDetail.pauseDayNum += 0; // 总暂停天数
     itemDetail.punchDayNum += 0; // 成功打卡天数
   }
-  console.log(itemDict, 'doingRefreshItem')
-  console.log(itemInfo, itemDetail, 'doingRefreshItemAAA')
 }
 
 function getItemByID(id) {
@@ -269,9 +267,7 @@ function getItemByID(id) {
     }
   }
   itemDict.itemDetail = wx.getStorageSync('activity'+id);
-  console.log(itemDict, 'beforeRefreshItem')
   refreshItem(itemDict);
-  console.log(itemDict, 'afterRefreshItem')
   arr[itemDict.itemInfo.tmpIdx] = itemDict.itemInfo;
   wx.setStorageSync('activity', arr);
   wx.setStorageSync('activity' + id, itemDict.itemDetail);
@@ -318,8 +314,8 @@ function deleteItemByID(id) {
 // check 没有重复打卡
 // 更新当前tmpItem
 // updateItem
-function punch(id, punchTime) {
-
+function punch(itemDict) {
+  return true;
 }
 
 function initDefaultItem() {
@@ -386,5 +382,6 @@ module.exports = {
   initDefaultItem: initDefaultItem,
   createItem: createItem,
   getItemByID: getItemByID,
-  updateItem: updateItem
+  updateItem: updateItem,
+  punch: punch
 }
