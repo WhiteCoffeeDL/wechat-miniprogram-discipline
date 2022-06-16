@@ -230,7 +230,7 @@ function refreshItem(itemDict) {
     if (ret <= 1) {
       // beginDate < new Date() -- 0
       // beginDate == new Date() -- 1
-      itemInfo.status == 1;
+      itemInfo.status = 1;
     }
   }
   if (itemInfo.status == 0) {
@@ -255,7 +255,8 @@ function refreshItem(itemDict) {
     itemDetail.pauseDayNum += 0; // 总暂停天数
     itemDetail.punchDayNum += 0; // 成功打卡天数
   }
-  
+  console.log(itemDict, 'doingRefreshItem')
+  console.log(itemInfo, itemDetail, 'doingRefreshItemAAA')
 }
 
 function getItemByID(id) {
@@ -268,7 +269,9 @@ function getItemByID(id) {
     }
   }
   itemDict.itemDetail = wx.getStorageSync('activity'+id);
+  console.log(itemDict, 'beforeRefreshItem')
   refreshItem(itemDict);
+  console.log(itemDict, 'afterRefreshItem')
   arr[itemDict.itemInfo.tmpIdx] = itemDict.itemInfo;
   wx.setStorageSync('activity', arr);
   wx.setStorageSync('activity' + id, itemDict.itemDetail);

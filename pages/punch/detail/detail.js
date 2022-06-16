@@ -1,18 +1,22 @@
 var util = require("../../../utils/util.js");
 
 Page({
-
   data: {
-
     // 活动状态 0(未开始) 1(进行中) 2(已结束)
-    state: 0,
+    taskState: 0,
     btnState: '',
-    disabled: false,
+    canEditFlag: false,
+    disablePunch: false,
+
+    // 暂存itemDict
+    itemDict: {},
 
     // 打卡详情
-    punchCount: 0,
-    sumDays: 0,
-    activity: []
+    punchDayNum: 0,
+    pauseDayNum: 0,
+    totalDayNum: 0,
+    successPunchRatio: 0,
+    activityDetail: []
   },
 
   // 加载初始化
@@ -23,87 +27,52 @@ Page({
 
   // 基础数据
   initBaseData(id) {
-    var arr = wx.getStorageSync('activity');
+    this.data.itemDict = util.getItemByID(id);
 
-    if (arr.length) {
-      arr.forEach((item) => {
+    var bPunched = util.retPunched(id);
+    var stateInfo = util.getStateInfo(this.data.itemDict.itemInfo.status, bPunched);
+    console.log(stateInfo);
+    console.log(this.data.itemDict.itemInfo.status);
+    console.log(bPunched);
+    this.setData({
+      content: this.data.itemDict.itemInfo.content,
+      createTime: this.data.itemDict.itemInfo.createTime,
+      period: this.data.itemDict.itemInfo.period,
+      punchDayNum: this.data.itemDict.itemDetail.punchDayNum,
+      pauseDayNum: this.data.itemDict.itemDetail.pauseDayNum,
+      totalDayNum: this.data.itemDict.itemDetail.totalDayNum,
+      successPunchRatio: (this.data.totalDayNum - this.data.pauseDayNum) ? this.data.punchDayNum / this.data.totalDayNum : null,
 
-        if (item.id == id) {
-          var iTaskState = util.retTaskState(item.beginDate);
-          var bPunched = util.retPunched(item.id);
-          
-          var stateInfo = util.getStateInfo(iTaskState, bPunched);
-          this.setData({
-            id: id,
-            content: item.content,
-            createTime: item.createTime,
-            beginDate: item.beginDate,
-            sumDays: item.sumDays,
-
-            state: iTaskState,
-            stateColorClass: stateInfo.color,
-            btnState: stateInfo.btn,
-            disabled: iTaskState != 1 || bPunched,
-          })
-        }
-      })
-    }
+      statInfoColor: stateInfo.color,
+      stateInfoBtn: stateInfo.btn,
+      disablePunch: this.data.itemDict.itemInfo.status != 1 || bPunched,
+      canEditFlag: true
+    })
   },
   // 打卡记录、勋章
   initPunchData(id) {
-
-    var data = wx.getStorageSync('activity' + id);
-
-    // 每次打卡详细记录 data.arrRecord
-    var arrRecord = data.arrRecord ? data.arrRecord : [];
-
-    // 打卡情况总览 date.reconds
-    var records = data.records ? data.records : [];
-
-    // 已打卡天数
-    var punchCount = data.punchCount ? data.punchCount : 0;
-
-    // 打卡已持续天数 data.lastedDays
-    var lastedDays = util.getSumDays(this.data.beginDate, util.formatDate(new Date()));
-
-    var d = [];
-    for (var i = 0; i < lastedDays; i++) {
-      if (records && records[i]) {
-        d.push(true);
-      } else {
-        d.push(false);
-      }
-    }
-    // console.log('打卡记录总览赋值', d);
-
     this.setData({
-      punchCount: punchCount,
-      activity: d, // TODO: 日历形式展示
-      arrRecord: arrRecord
+      history: ['TODO:', 'Using beautiful calendar with icon']
+      // history: this.data.itemDict.itemDetail.history
     })
   },
 
   // 编辑活动
   editActivity() {
     wx.redirectTo({
-      url: '../edit/edit?id=' + this.data.id +'&state='+this.data.state,
+      url: '../edit/edit?id=' + this.data.itemDict.itemInfo.id +'&state='+this.data.itemDict.itemInfo.status,
     })
   },
 
-  // 创建者结束活动
   stopActivity() {
-
     var that = this;
     wx.showModal({
       title: '提示',
       content: '将删除相关数据，继续操作？',
       showCancel: true,
-
       success: function(res) {
         if (res.confirm) {
-
-          that.DeleteActivity(that.data.id);
-          // 活动被销毁，返回main
+          that.DeleteActivity(that.data.itemDict.itemInfo.id);
           wx.navigateBack({
             url: '../main/main?update=true'
           })
@@ -116,10 +85,10 @@ Page({
     util.deleteItemByID(id);
   },
 
-  signIn() {
+  signIn() { // 打卡后要刷新当前页面
 
-    var id = this.data.id;
-    var bSucceed = util.signIn(id, this.data.beginDate);
+    var id = this.data.itemDict.itemInfo.id;
+    var bSucceed = util.signIn(id, this.data.itemDict.itemInfo.beginDate);
     if (bSucceed) {
       this.initPunchData(id);
       this.setData({

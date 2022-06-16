@@ -1,43 +1,37 @@
 <view class="detail-container">
 
-  <!-- 任务详情 -->
-  <view class='box-general {{stateColorClass}}'>
+  <view class='box-general {{statInfoColor}}'>
     <view class='info'>
       <view class='title'>{{title}}</view>
       <view>{{content}}</view>
-      <view>創建于: {{createTime}}</view>
-      <view>堅持中: {{beginDate}} —— {{endDate}}</view>
+      <view>创建时间: {{createTime}}</view>
     </view>
-    <view wx:if='{{state<2}}' class='btn-edit' bindtap='editActivity'><image src='/img/icon/edit_w2.png'></image></view>
-    <view class='btn-cancel' bindtap="stopActivity">刪除打卡計劃</view>
+    <view wx:if='{{canEditFlag}}' class='btn-edit' bindtap='editActivity'><image src='/img/icon/edit_w2.png'></image></view>
+    <view class='btn-cancel' bindtap="stopActivity">删除计划</view>
   </view>
 
-  <!-- 打卡总览 -->
+  <!-- 打卡统计信息展示 -->
   <view class='box-punchinfo'>
-    <view class='title'>已打卡
-      <text class="f-red">{{punchCount}}</text> /
-      <text class='f-dark'>{{sumDays}}</text> 次
-    </view>
-    <view class='list'>
-      <block wx:for="{{activity}}" wx:key="{{item}}">
-        <image wx:if="{{item}}" class="item active" src='/img/dot_hl.png'></image>
-        <image wx:else class="item" src='/img/dot.png'></image>
-      </block>
-    </view>
+    <view class='title'>每<text class='f-dark'>{{totalDayNum}}</text>天一个打卡周期</view>
+    <view class='title'>创建至今<text class='f-dark'>{{totalDayNum}}</text>天</view>
+    <view class='title'>坚持打卡<text class='f-dark'>{{punchDayNum}}</text>天</view>
+    <view class='title'>中途暂停<text class='f-dark'>{{pauseDayNum}}</text>天</view>
+    <view class='title'>自律程度<text class='f-red'>{{successPunchRatio}}</text></view>
   </view>
   <!-- 打卡详情 -->
   <view class='box-punchinfo'>
     <view class='title'>打卡详情</view>
-    <view class='list'>
-      <block wx:for="{{arrRecord}}" wx:key="{{item.index}}">
+    <text>{{history}}</text>
+    <!-- <view class='list'>
+      <block wx:for="{{history}}" wx:key="{{item.index}}">
         <view class='item2'>
           <text>{{item.date}}</text>
         </view>
       </block>
-    </view>
+    </view> -->
   </view>
 </view>
 
 <view class="createM">
-  <button type="primary" size="default" disabled="{{disabled}}" bindtap="signIn">{{btnState}}</button>
+  <button type="primary" size="default" disabled="{{disablePunch}}" bindtap="signIn">{{stateInfoBtn}}</button>
 </view>
