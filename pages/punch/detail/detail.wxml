@@ -6,7 +6,7 @@
       <view>{{content}}</view>
       <view>创建时间: {{createTime}}</view>
     </view>
-    <view wx:if='{{canEditFlag}}' class='btn-edit' bindtap='editActivity'><image src='/img/icon/edit_w2.png'></image></view>
+    <view wx:if='{{canEditFlag}}' class='btn-edit' bindtap='editActivity'><image src='/assets/icon/edit_w2.png'></image></view>
     <view class='btn-cancel' bindtap="stopActivity">删除计划</view>
   </view>
 

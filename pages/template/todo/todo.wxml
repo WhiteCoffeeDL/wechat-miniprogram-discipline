@@ -2,7 +2,7 @@
 
   <view class='item-box'>
     <view class='checkbox' data-id='{{item.id}}' data-state='{{item.state}}' bindtap='onChangeDoneState'>
-      <image src="{{item.state == 2?'/img/icon/done.gif':'/img/icon/undone.gif'}}" class="checkbox" />
+      <image src="{{item.state == 2?'/assets/icon/done.gif':'/assets/icon/undone.gif'}}" class="checkbox" />
     </view>
     <text class='name' bindtap='onShowDesc'>{{item.title}}</text>
   </view>
@@ -11,10 +11,10 @@
     <view class='desc'>{{item.desc}}</view>
     <block hidden='{{!bHideEdit}}'>
       <view class='edit' data-id='{{item.id}}' bindtap='onShowEdit'>
-        <image src='/img/icon/edit.png'></image>
+        <image src='/assets/icon/edit.png'></image>
       </view>
       <view class='del' data-id='{{item.id}}' bindtap='onDelete'>
-        <image src='/img/icon/del.png'></image>
+        <image src='/assets/icon/del.png'></image>
       </view>
     </block>
   </view>

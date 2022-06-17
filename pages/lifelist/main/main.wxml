@@ -48,6 +48,6 @@
 
   <!--添加创建新活动-->
   <view class="add-btn" bindtap="onAddLifelist">
-    <image src="/img/app.png"></image>
+    <image src="/assets/create.png"></image>
   </view>
 </view>

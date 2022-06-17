@@ -131,7 +131,7 @@ Component({
       } else {
         wx: wx.showToast({
           title: '标题不可为空',
-          image: '/img/icon/warning.png'
+          image: '/assets/icon/warning.png'
         })
       }
     }

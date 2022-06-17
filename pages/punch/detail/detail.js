@@ -21,16 +21,16 @@ Page({
 
   // 加载初始化
   onLoad(e) {
-    this.initBaseData(e.id);
-    this.initPunchData(e.id);
+    this.refreshBaseInfo(e.id);
+    this.showPunchDetail();
   },
 
   // 基础数据
-  initBaseData(id) {
+  refreshBaseInfo(id) {
     this.data.itemDict = util.getItemByID(id);
 
-    var bPunched = util.retPunched(id);
-    var stateInfo = util.getStateInfo(this.data.itemDict.itemInfo.status, bPunched);
+    var punched = util.retPunched(this.data.itemDict);
+    var stateInfo = util.getStateInfo(this.data.itemDict.itemInfo.status, punched);
     this.setData({
       content: this.data.itemDict.itemInfo.content,
       createTime: this.data.itemDict.itemInfo.createTime,
@@ -38,16 +38,16 @@ Page({
       punchDayNum: this.data.itemDict.itemDetail.punchDayNum,
       pauseDayNum: this.data.itemDict.itemDetail.pauseDayNum,
       totalDayNum: this.data.itemDict.itemDetail.totalDayNum,
-      successPunchRatio: (this.data.totalDayNum - this.data.pauseDayNum) ? this.data.punchDayNum / this.data.totalDayNum : null,
+      successPunchRatio: this.data.itemDict.itemDetail.successPunchRatio,
 
       statInfoColor: stateInfo.color,
       stateInfoBtn: stateInfo.btn,
-      disablePunch: this.data.itemDict.itemInfo.status != 1 || bPunched,
+      disablePunch: this.data.itemDict.itemInfo.status != 1 || punched,
       canEditFlag: true
     })
   },
   // 打卡记录、勋章
-  initPunchData(id) {
+  showPunchDetail() {
     this.setData({
       history: ['TODO:', 'Using beautiful calendar with icon']
       // history: this.data.itemDict.itemDetail.history
@@ -83,15 +83,15 @@ Page({
   },
 
   punch() { // 打卡后要刷新当前页面
-
-    var id = this.data.itemDict.itemInfo.id;
-    var bSucceed = util.punch(this.data.itemDict);
-    if (bSucceed) {
-      this.initPunchData(id);
-      this.setData({
-        btnState: util.getStateInfo(1, true).btn,
-        disabled: true
-      })
+    var succeed = util.punch(this.data.itemDict);
+    var punched = util.retPunched(this.data.itemDict);
+    if (succeed) {
+        this.refreshBaseInfo(this.data.itemDict.itemInfo.id);
+        this.showPunchDetail();
+        this.setData({
+            btnState: util.getStateInfo(1, punched).btn,
+            disablePunch: true
+        })
     }
   }
 })

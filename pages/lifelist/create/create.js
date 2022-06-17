@@ -47,14 +47,14 @@ Page({
     if (value.title.trim() === '') {
       wx.showToast({
         title: '标题不可为空',
-        image: '/img/icon/warning.png'
+        image: '/assets/icon/warning.png'
       })
       return;
     }
     if (value.tags.length == 0) {
       wx.showToast({
         title: '标签不可为空',
-        image: '/img/icon/warning.png'
+        image: '/assets/icon/warning.png'
       })
       return;
     }
@@ -119,7 +119,7 @@ Page({
     if(tag.length == 0){
       wx.showToast({
         title: '标签不能为空',
-        image: '/img/icon/warning.png'
+        image: '/assets/icon/warning.png'
       });
       return;
     }
@@ -150,7 +150,7 @@ Page({
       // !!! icon 显示的还是默认的 success
       wx.showToast({
         title: '该标签已存在',
-        image: '/img/icon/warning.png'
+        image: '/assets/icon/warning.png'
       })
     }
   }
