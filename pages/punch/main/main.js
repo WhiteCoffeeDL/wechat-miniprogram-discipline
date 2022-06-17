@@ -67,8 +67,8 @@ Page({
       arr.forEach((item, i) => {
         var beginDate = item.beginDate;
         var endDate = item.endDate;
-        var iTaskState = util.retTaskState(beginDate, endDate);
-        var bPunched = util.retPunched(item.id);
+        var iTaskState = itemDict.itemInfo.status;
+        var bPunched = util.retPunched(itemDict);
 
         // 定义变量要赋值，明确变量类型，不然赋值会不成功
         var d = {
