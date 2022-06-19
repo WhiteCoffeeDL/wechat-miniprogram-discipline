@@ -15,7 +15,7 @@
     <view wx:if="{{listPause.length}}" class='punch-list c-pause'>
       <view class='box-title'>暫停中</view>
       <view class="punch-box">
-        <block wx:for="{{listComing}}" wx:key="{{item.id}}">
+        <block wx:for="{{listPause}}" wx:key="{{item.id}}">
           <template is="punch-item" data="{{...item}}" />
         </block>
       </view>

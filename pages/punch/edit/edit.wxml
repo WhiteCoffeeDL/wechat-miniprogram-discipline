@@ -3,7 +3,11 @@
   <view class="input-box content">
     <input type="text" value="{{content}}" bindblur="contentChange" />
   </view>
-
+  <view wx:if="{{pauseFlag>=0}}" class='switch'>
+    <switch checked='{{pauseFlag}}' bindchange="bindSwithChange">暂停计划
+      <view class='btn-cancel' bindtap="deleteActivity">删除计划</view>
+    </switch>
+  </view>
   <view class='time-box'>
     <view class='box-title'>打卡周期</view>
     <view class='duration-time'>
@@ -19,6 +23,6 @@
     </view>
   </view>
   <view class="createM">
-    <button type="primary" size="default" bindtap="editActivity">确认修改</button>
+    <button type="primary" size="default" bindtap="commitEditActivity">确认修改</button>
   </view>
 </view>

@@ -33,7 +33,7 @@ Page({
     var stateInfo = util.getStateInfo(this.data.itemDict.itemInfo.status, punched);
     this.setData({
       content: this.data.itemDict.itemInfo.content,
-      createTime: this.data.itemDict.itemInfo.createTime,
+      beginDate: this.data.itemDict.itemInfo.beginDate,
       period: this.data.itemDict.itemInfo.period,
       punchDayNum: this.data.itemDict.itemDetail.punchDayNum,
       pauseDayNum: this.data.itemDict.itemDetail.pauseDayNum,
@@ -59,27 +59,6 @@ Page({
     wx.redirectTo({
       url: '../edit/edit?id=' + this.data.itemDict.itemInfo.id +'&state='+this.data.itemDict.itemInfo.status,
     })
-  },
-
-  stopActivity() {
-    var that = this;
-    wx.showModal({
-      title: '提示',
-      content: '将删除相关数据，继续操作？',
-      showCancel: true,
-      success: function(res) {
-        if (res.confirm) {
-          that.DeleteActivity(that.data.itemDict.itemInfo.id);
-          wx.navigateBack({
-            url: '../main/main?update=true'
-          })
-        }
-      }
-    })
-  },
-
-  DeleteActivity(id) {
-    util.deleteItemByID(id);
   },
 
   punch() { // 打卡后要刷新当前页面

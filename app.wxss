@@ -95,12 +95,15 @@ page,
 
 /* 颜色 */
 .c-doing {
-  background: #7fabda;
+  background: #a8da7f;
+}
+.c-pause {
+  background: #efce4a;
 }
 .c-coming {
   /* background: #EB7159; */
-  background: #efce4a;
+  background: #7fabda;
 }
-.c-completed {
+.c-fnish {
   background: #d75a4a;
 }

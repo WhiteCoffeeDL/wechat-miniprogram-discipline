@@ -71,7 +71,7 @@ Page({
             listComing.push(tmpInfoShow);
             break;
           case 0:
-            listPaused.push(tmpInfoShow);
+            listPause.push(tmpInfoShow);
             break;
           case 1:
             listDoing.push(tmpInfoShow);

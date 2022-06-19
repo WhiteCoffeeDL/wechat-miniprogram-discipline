@@ -45,6 +45,16 @@
   padding: 0 20rpx 20rpx;
 }
 
+.btn-cancel {
+    margin: 30rpx;
+    padding: 20rpx 30rpx;
+    border-radius: 10rpx;
+    text-align: right;
+    font-size: 30rpx;
+    background: #df2d4f;
+    color: #fff;
+  }
+
 /* 输入域 */
 .duration-time {
   display: flex;

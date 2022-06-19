@@ -40,11 +40,6 @@
   border-left: 1px solid #ddd;
 }
 
-/* 切换按钮 */
-.switch {
-  padding: 0 20rpx 20rpx;
-}
-
 /* 输入域 */
 .duration-time {
   display: flex;

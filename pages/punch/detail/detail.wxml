@@ -4,10 +4,9 @@
     <view class='info'>
       <view class='title'>{{title}}</view>
       <view>{{content}}</view>
-      <view>创建时间: {{createTime}}</view>
+      <view>开始时间: {{beginDate}}</view>
     </view>
     <view wx:if='{{canEditFlag}}' class='btn-edit' bindtap='editActivity'><image src='/assets/icon/edit_w2.png'></image></view>
-    <view class='btn-cancel' bindtap="stopActivity">删除计划</view>
   </view>
 
   <!-- 打卡统计信息展示 -->
