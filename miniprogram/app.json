@@ -1,44 +1,46 @@
 {
-  "pages": [
-      "pages/punch/main/main",
-      "pages/punch/create/create",
-      "pages/punch/detail/detail",
-      "pages/punch/edit/edit",
-      "pages/lifelist/main/main",
-      "pages/lifelist/create/create",
-      "pages/three/main/main",
-      "pages/three/create/create",
-      "pages/mine/index"
-  ],
-  "window": {
-      "backgroundTextStyle": "light",
-      "navigationBarBackgroundColor": "#333",
-      "navigationBarTitleText": "咸鱼翻身日记本",
-      "navigationBarTextStyle": "white"
-  },
-  "tabBar": {
-      "color": "#999",
-      "selectedColor": "#1f4ba5",
-      "list": [
-          {
-              "pagePath": "pages/three/main/main",
-              "text": "目标",
-              "iconPath": "/assets/tab/things.png",
-              "selectedIconPath": "/assets/tab/things_hl.png"
-          },
-          {
-              "pagePath": "pages/punch/main/main",
-              "text": "打卡",
-              "iconPath": "/assets/tab/punch.png",
-              "selectedIconPath": "/assets/tab/punch_hl.png"
-          },
-          {
-              "pagePath": "pages/lifelist/main/main",
-              "text": "清单:待修改",
-              "iconPath": "/assets/tab/list.png",
-              "selectedIconPath": "/assets/tab/list_hl.png"
-          }
-      ]
-  },
-  "sitemapLocation": "sitemap.json"
+    "pages": [
+        "pages/index/index",
+        "pages/user/main/main",
+        "pages/todo/main/main",
+        "pages/punch/main/main",
+        "pages/goal/main/main"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#333",
+        "navigationBarTitleText": "咸鱼翻身日记本",
+        "navigationBarTextStyle": "white"
+    },
+    "tabBar": {
+        "color": "#999",
+        "selectedColor": "#1f4ba5",
+        "list": [
+            {
+                "pagePath": "pages/goal/main/main",
+                "text": "目标",
+                "iconPath": "/assets/tmp.png",
+                "selectedIconPath": "/assets/tmphl.png"
+            },
+            {
+                "pagePath": "pages/punch/main/main",
+                "text": "打卡",
+                "iconPath": "/assets/tmp.png",
+                "selectedIconPath": "/assets/tmphl.png"
+            },
+            {
+                "pagePath": "pages/todo/main/main",
+                "text": "待办",
+                "iconPath": "/assets/tmp.png",
+                "selectedIconPath": "/assets/tmphl.png"
+            },
+            {
+                "pagePath": "pages/user/main/main",
+                "text": "用户",
+                "iconPath": "/assets/tmp.png",
+                "selectedIconPath": "/assets/tmphl.png"
+            }
+        ]
+    },
+    "sitemapLocation": "sitemap.json"
 }

@@ -1,9 +1,0 @@
-<template name="punch-item">
-  <view class="punch-item" bindtap="detail" data-id="{{id}}">
-    <view class='wrap'>
-      <text class='name'>{{content}}</text>
-      <button class='btn' type="primary" size="mini" disabled="{{disabled}}" data-id="{{id}}"  catchtap="punch">{{btnState}}</button>
-      <view class="time">开始时间：{{beginDate}}</view>
-    </view>
-  </view>
-</template>

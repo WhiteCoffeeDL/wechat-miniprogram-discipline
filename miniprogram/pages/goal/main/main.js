@@ -1,4 +1,4 @@
-// pages/punch/main/main.js
+// pages/goal/main/main.js
 Page({
 
     /**
